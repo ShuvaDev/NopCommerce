@@ -1,0 +1,7 @@
+﻿{
+  "SystemName": "NopSlate",
+  "FriendlyName": "Nop Slate",
+  "SupportRTL": true,
+  "PreviewImageUrl": "~/Themes/NopSlate/preview.png",
+  "PreviewText": "The 'NopSlate' site theme"
+}
