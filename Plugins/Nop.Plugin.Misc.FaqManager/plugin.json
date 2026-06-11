@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Misc",
+  "FriendlyName": "FaqManager",
+  "SystemName": "Misc.FaqManager",
+  "Version": "5.00.0",
+  "SupportedVersions": [ "5.00" ],
+  "Author": "S.R. Shuva Dev",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Misc.FaqManager.dll",
+  "Description": "This plugin allows you to create, manage, and display Frequently Asked Questions (FAQs) in your store."
+}
