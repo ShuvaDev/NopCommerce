@@ -1,7 +1,9 @@
 ﻿using Nop.Core;
 using Nop.Core.Caching;
+using Nop.Core.Events;
 using Nop.Data;
 using Nop.Plugin.Misc.FaqManager.Domain;
+using Nop.Services.Caching;
 
 namespace Nop.Plugin.Misc.FaqManager.Services;
 
@@ -14,7 +16,7 @@ public class FaqGroupService : IFaqGroupService
 
     private readonly IRepository<FaqGroup> _faqGroupRepository;
     private readonly IFaqItemService _faqItemService;
-    private readonly IStaticCacheManager _staticCacheManager;
+    private readonly IEventPublisher _eventPublisher;
 
     #endregion
 
@@ -25,28 +27,15 @@ public class FaqGroupService : IFaqGroupService
     /// </summary>
     /// <param name="faqGroupRepository">FAQ group repository.</param>
     /// <param name="faqItemService">FAQ item service.</param>
-    /// <param name="staticCacheManager">Static cache manager.</param>
+    /// <param name="eventPublisher">Event publisher.</param>
     public FaqGroupService(
         IRepository<FaqGroup> faqGroupRepository,
         IFaqItemService faqItemService,
-        IStaticCacheManager staticCacheManager)
+        IEventPublisher eventPublisher)
     {
         _faqGroupRepository = faqGroupRepository;
         _faqItemService = faqItemService;
-        _staticCacheManager = staticCacheManager;
-    }
-
-    #endregion
-
-    #region Utilities
-
-    /// <summary>
-    /// Clears FAQ-related cache entries.
-    /// </summary>
-    protected virtual async Task ClearCacheAsync()
-    {
-        await _staticCacheManager.RemoveByPrefixAsync(
-            FaqManagerDefaults.FaqPrefixCacheKey);
+        _eventPublisher = eventPublisher;
     }
 
     #endregion
@@ -162,7 +151,7 @@ public class FaqGroupService : IFaqGroupService
 
         await _faqGroupRepository.InsertAsync(faqGroup);
 
-        await ClearCacheAsync();
+        await _eventPublisher.EntityInsertedAsync(faqGroup);
     }
 
     /// <summary>
@@ -175,7 +164,7 @@ public class FaqGroupService : IFaqGroupService
 
         await _faqGroupRepository.UpdateAsync(faqGroup);
 
-        await ClearCacheAsync();
+        await _eventPublisher.EntityUpdatedAsync(faqGroup);
     }
 
     /// <summary>
@@ -197,7 +186,7 @@ public class FaqGroupService : IFaqGroupService
 
         await _faqGroupRepository.DeleteAsync(faqGroup);
 
-        await ClearCacheAsync();
+        await _eventPublisher.EntityDeletedAsync(faqGroup);
     }
 
     #endregion

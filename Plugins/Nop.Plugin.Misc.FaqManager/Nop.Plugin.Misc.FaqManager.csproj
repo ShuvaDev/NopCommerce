@@ -45,8 +45,6 @@
     <Folder Include="Public\Factories\" />
     <Folder Include="Public\Models\" />
     <Folder Include="Public\Validators\" />
-    <Folder Include="Services\Caching\" />
-    <Folder Include="Services\Events\" />
   </ItemGroup>
 
   <ItemGroup>

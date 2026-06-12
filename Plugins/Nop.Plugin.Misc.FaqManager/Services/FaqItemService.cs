@@ -1,5 +1,6 @@
 ﻿using Nop.Core;
 using Nop.Core.Caching;
+using Nop.Core.Events;
 using Nop.Data;
 using Nop.Plugin.Misc.FaqManager.Domain;
 
@@ -13,8 +14,8 @@ public class FaqItemService : IFaqItemService
     #region Fields
 
     private readonly IRepository<FaqItem> _faqItemRepository;
+    private readonly IEventPublisher _eventPublisher;
     private readonly IStaticCacheManager _staticCacheManager;
-
     #endregion
 
     #region Ctor
@@ -23,25 +24,15 @@ public class FaqItemService : IFaqItemService
     /// Initializes a new instance of the <see cref="FaqItemService"/> class.
     /// </summary>
     /// <param name="faqItemRepository">FAQ item repository.</param>
+    /// <param name="eventPublisher">Event publisher.</param>
     /// <param name="staticCacheManager">Static cache manager.</param>
     public FaqItemService(IRepository<FaqItem> faqItemRepository,
+        IEventPublisher eventPublisher,
         IStaticCacheManager staticCacheManager)
     {
         _faqItemRepository = faqItemRepository;
+        _eventPublisher = eventPublisher;
         _staticCacheManager = staticCacheManager;
-    }
-
-    #endregion
-
-    #region Utilities
-
-    /// <summary>
-    /// Clears FAQ-related cache entries.
-    /// </summary>
-    protected virtual async Task ClearCacheAsync()
-    {
-        await _staticCacheManager.RemoveByPrefixAsync(
-            FaqManagerDefaults.FaqPrefixCacheKey);
     }
 
     #endregion
@@ -154,7 +145,7 @@ public class FaqItemService : IFaqItemService
 
         await _faqItemRepository.InsertAsync(faqItem);
 
-        await ClearCacheAsync();
+        await _eventPublisher.EntityInsertedAsync(faqItem);
     }
 
     /// <summary>
@@ -167,7 +158,7 @@ public class FaqItemService : IFaqItemService
 
         await _faqItemRepository.UpdateAsync(faqItem);
 
-        await ClearCacheAsync();
+        await _eventPublisher.EntityUpdatedAsync(faqItem);
     }
 
     /// <summary>
@@ -180,7 +171,7 @@ public class FaqItemService : IFaqItemService
 
         await _faqItemRepository.DeleteAsync(faqItem);
 
-        await ClearCacheAsync();
+        await _eventPublisher.EntityDeletedAsync(faqItem);
     }
 
     #endregion
