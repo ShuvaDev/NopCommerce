@@ -21,6 +21,7 @@ public class NopStartup : INopStartup
         //register custom services
         services.AddScoped<IFaqGroupService, FaqGroupService>();
         services.AddScoped<IFaqItemService, FaqItemService>();
+        services.AddScoped<FaqManagerInstallService>();
     }
 
     /// <summary>

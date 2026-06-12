@@ -25,6 +25,9 @@
     <Content Include="plugin.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Public\Views\Components\ProductFaq.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Public\Views\_ViewImports.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -37,10 +40,8 @@
     <Folder Include="Admin\Controllers\" />
     <Folder Include="Admin\Factories\" />
     <Folder Include="Admin\Validators\" />
-    <Folder Include="Content\" />
     <Folder Include="Data\Migrations\" />
     <Folder Include="Domain\" />
-    <Folder Include="Public\Components\" />
     <Folder Include="Public\Controllers\" />
     <Folder Include="Public\Factories\" />
     <Folder Include="Public\Models\" />
@@ -52,6 +53,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Content\scripts.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\styles.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

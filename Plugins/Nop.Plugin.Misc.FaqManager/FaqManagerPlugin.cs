@@ -1,6 +1,11 @@
-﻿using Nop.Services.Cms;
+﻿using Nop.Core.Domain.Cms;
+using Nop.Plugin.Misc.FaqManager.Public.Components;
+using Nop.Plugin.Misc.FaqManager.Services;
+using Nop.Services.Cms;
 using Nop.Services.Common;
+using Nop.Services.Configuration;
 using Nop.Services.Plugins;
+using Nop.Web.Framework.Infrastructure;
 
 namespace Nop.Plugin.Misc.FaqManager
 {
@@ -8,27 +13,70 @@ namespace Nop.Plugin.Misc.FaqManager
     {
         #region Fields
 
+        private readonly ISettingService _settingService;
+        private readonly FaqManagerInstallService _faqManagerInstallService;
+        private readonly WidgetSettings _widgetSettings;
+
         #endregion
 
         #region Ctor
-        public FaqManagerPlugin()
+
+        public FaqManagerPlugin(ISettingService settingService,
+            FaqManagerInstallService faqManagerInstallService,
+            WidgetSettings widgetSettings)
         {
+            _settingService = settingService;
+            _faqManagerInstallService = faqManagerInstallService;
+            _widgetSettings = widgetSettings;
         }
+
 
         #endregion
 
         #region Methods
 
+        /// <summary>
+        /// Install the plugin
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public override async Task InstallAsync()
+        {
+            await _faqManagerInstallService.InstallRequiredDataAsync();
+
+            //widget
+            if (!_widgetSettings.ActiveWidgetSystemNames.Contains(FaqManagerDefaults.SystemName))
+            {
+                _widgetSettings.ActiveWidgetSystemNames.Add(FaqManagerDefaults.SystemName);
+                await _settingService.SaveSettingAsync(_widgetSettings);
+            }
+        }
+
+        /// <summary>
+        /// Uninstall the plugin
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public override async Task UninstallAsync()
+        {
+            await _faqManagerInstallService.UninstallRequiredDataAsync();
+
+            //widget
+            if (_widgetSettings.ActiveWidgetSystemNames.Contains(FaqManagerDefaults.SystemName))
+            {
+                _widgetSettings.ActiveWidgetSystemNames.Remove(FaqManagerDefaults.SystemName);
+                await _settingService.SaveSettingAsync(_widgetSettings);
+            }
+        }
+
         #region IWidgetPlugin
 
         public Type GetWidgetViewComponent(string widgetZone)
         {
-            throw new NotImplementedException();
+            return typeof(ProductFaqViewComponent);
         }
 
         public Task<IList<string>> GetWidgetZonesAsync()
         {
-            throw new NotImplementedException();
+            return Task.FromResult<IList<string>>([PublicWidgetZones.ProductDetailsBottom]);
         }
 
         #endregion
@@ -39,7 +87,7 @@ namespace Nop.Plugin.Misc.FaqManager
 
         #region IWidgetPlugin
 
-        public bool HideInWidgetList => throw new NotImplementedException();
+        public bool HideInWidgetList => true;
 
 
         #endregion
