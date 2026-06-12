@@ -30,7 +30,6 @@
     <Folder Include="Admin\Models\" />
     <Folder Include="Admin\Validators\" />
     <Folder Include="Content\" />
-    <Folder Include="Data\Mapping\" />
     <Folder Include="Data\Migrations\" />
     <Folder Include="Domain\" />
     <Folder Include="Infrastructure\" />
