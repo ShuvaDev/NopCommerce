@@ -40,7 +40,6 @@
     <Folder Include="Admin\Controllers\" />
     <Folder Include="Admin\Factories\" />
     <Folder Include="Admin\Validators\" />
-    <Folder Include="Data\Migrations\" />
     <Folder Include="Domain\" />
     <Folder Include="Public\Controllers\" />
     <Folder Include="Public\Factories\" />
