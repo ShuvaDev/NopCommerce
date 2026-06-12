@@ -36,7 +36,6 @@
   <ItemGroup>
     <Folder Include="Admin\Controllers\" />
     <Folder Include="Admin\Factories\" />
-    <Folder Include="Admin\Models\" />
     <Folder Include="Admin\Validators\" />
     <Folder Include="Content\" />
     <Folder Include="Data\Migrations\" />
