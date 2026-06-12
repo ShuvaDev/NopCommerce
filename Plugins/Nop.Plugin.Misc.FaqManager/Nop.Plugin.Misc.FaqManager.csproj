@@ -41,7 +41,6 @@
     <Folder Include="Content\" />
     <Folder Include="Data\Migrations\" />
     <Folder Include="Domain\" />
-    <Folder Include="Infrastructure\" />
     <Folder Include="Public\Components\" />
     <Folder Include="Public\Controllers\" />
     <Folder Include="Public\Factories\" />
