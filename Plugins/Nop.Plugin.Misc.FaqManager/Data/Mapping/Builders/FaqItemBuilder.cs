@@ -19,11 +19,11 @@ public class FaqItemBuilder : NopEntityBuilder<FaqItem>
     public override void MapEntity(CreateTableExpressionBuilder table)
     {
         table
-            .WithColumn(nameof(FaqItem.Question)).AsString(int.MaxValue).NotNullable()
+            .WithColumn(nameof(FaqItem.Question)).AsString(1000).NotNullable()
             .WithColumn(nameof(FaqItem.Answer)).AsString(int.MaxValue).NotNullable()
             .WithColumn(nameof(FaqItem.DisplayOrder)).AsInt32().NotNullable()
             .WithColumn(nameof(FaqItem.Published)).AsBoolean().NotNullable()
-            .WithColumn(nameof(FaqItem.FaqGroupId)).AsInt32().ForeignKey<FaqGroup>();
+            .WithColumn(nameof(FaqItem.FaqGroupId)).AsInt32().NotNullable().ForeignKey<FaqGroup>();
     }
 
     #endregion

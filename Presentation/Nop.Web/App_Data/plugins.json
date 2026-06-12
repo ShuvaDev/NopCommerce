@@ -2,7 +2,12 @@
   "InstalledPluginNames": [
     "Obsolete field, using only for compatibility"
   ],
-  "InstalledPlugins": [],
+  "InstalledPlugins": [
+    {
+      "SystemName": "Misc.FaqManager",
+      "Version": "5.00.0"
+    }
+  ],
   "PluginNamesToUninstall": [],
   "PluginNamesToDelete": [],
   "PluginNamesToInstall": []

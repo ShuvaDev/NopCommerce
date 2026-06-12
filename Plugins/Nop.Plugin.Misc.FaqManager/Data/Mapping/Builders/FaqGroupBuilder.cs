@@ -21,7 +21,7 @@ public class FaqGroupBuilder : NopEntityBuilder<FaqGroup>
     {
         table
             .WithColumn(nameof(FaqGroup.Name)).AsString(400).NotNullable()
-            .WithColumn(nameof(FaqGroup.ProductId)).AsInt32().ForeignKey<Product>()
+            .WithColumn(nameof(FaqGroup.ProductId)).AsInt32().NotNullable().ForeignKey<Product>()
             .WithColumn(nameof(FaqGroup.DisplayOrder)).AsInt32().NotNullable()
             .WithColumn(nameof(FaqGroup.Published)).AsBoolean().NotNullable();
     }
