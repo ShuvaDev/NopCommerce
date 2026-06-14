@@ -7,6 +7,6 @@ public record FaqGroupLocalizedModel : ILocalizedLocaleModel
 {
     public int LanguageId { get; set; }
 
-    [NopResourceDisplayName("Plugins.Misc.FaqManager.Fields.Name")]
+    [NopResourceDisplayName("Plugins.Misc.FaqManager.Groups.Fields.Name")]
     public string Name { get; set; }
 }

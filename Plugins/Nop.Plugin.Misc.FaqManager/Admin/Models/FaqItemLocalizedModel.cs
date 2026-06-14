@@ -7,9 +7,9 @@ public record FaqItemLocalizedModel : ILocalizedLocaleModel
 {
     public int LanguageId { get; set; }
 
-    [NopResourceDisplayName("Plugins.Misc.FaqManager.Fields.Question")]
+    [NopResourceDisplayName("Plugins.Misc.FaqManager.Items.Fields.Question")]
     public string Question { get; set; }
 
-    [NopResourceDisplayName("Plugins.Misc.FaqManager.Fields.Answer")]
+    [NopResourceDisplayName("Plugins.Misc.FaqManager.Items.Fields.Answer")]
     public string Answer { get; set; }
 }

@@ -39,7 +39,6 @@
   <ItemGroup>
     <Folder Include="Admin\Controllers\" />
     <Folder Include="Admin\Factories\" />
-    <Folder Include="Admin\Validators\" />
     <Folder Include="Domain\" />
     <Folder Include="Public\Controllers\" />
     <Folder Include="Public\Validators\" />
