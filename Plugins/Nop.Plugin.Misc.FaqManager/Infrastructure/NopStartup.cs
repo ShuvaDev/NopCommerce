@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Infrastructure;
+using Nop.Plugin.Misc.FaqManager.Public.Factories;
 using Nop.Plugin.Misc.FaqManager.Services;
 
 namespace Nop.Plugin.Misc.FaqManager.Infrastructure;
@@ -22,6 +23,7 @@ public class NopStartup : INopStartup
         services.AddScoped<IFaqGroupService, FaqGroupService>();
         services.AddScoped<IFaqItemService, FaqItemService>();
         services.AddScoped<FaqManagerInstallService>();
+        services.AddScoped<ProductFaqModelFactory>();
     }
 
     /// <summary>

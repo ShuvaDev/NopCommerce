@@ -3,6 +3,25 @@
     margin: 30px auto;
 }
 
+.faq-title {
+    margin: 0 0 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #eee;
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.faq-count {
+    font-size: 16px;
+    font-weight: 500;
+    color: #777;
+}
+
 .faq-item {
     border: 1px solid #ddd;
     border-radius: 6px;

@@ -19,10 +19,22 @@ public class FaqManagerDefaults
         "Nop.plugin.misc.faqmanager.";
 
     /// <summary>
-    /// Cache key for published FAQ items by group identifier
+    /// Published FAQ items by group
     /// </summary>
     public static CacheKey FaqItemsByGroupIdCacheKey =>
         new("Nop.plugin.misc.faqmanager.items.bygroup.{0}");
+
+    /// <summary>
+    /// Published FAQ group by product
+    /// </summary>
+    public static CacheKey FaqGroupByProductIdCacheKey =>
+        new("Nop.plugin.misc.faqmanager.group.byproduct.{0}");
+
+    /// <summary>
+    /// Storefront FAQ model {0} = ProductId {1} = LanguageId
+    /// </summary>
+    public static CacheKey ProductFaqModelCacheKey =>
+        new("Nop.plugin.misc.faqmanager.productfaq.{0}-{1}");
 
 
     #region Permissions

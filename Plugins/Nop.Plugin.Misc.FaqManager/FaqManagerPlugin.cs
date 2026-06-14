@@ -76,7 +76,7 @@ namespace Nop.Plugin.Misc.FaqManager
 
         public Task<IList<string>> GetWidgetZonesAsync()
         {
-            return Task.FromResult<IList<string>>([PublicWidgetZones.ProductDetailsBottom]);
+            return Task.FromResult<IList<string>>(new List<string> { PublicWidgetZones.ProductDetailsBottom });
         }
 
         #endregion

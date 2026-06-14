@@ -94,7 +94,7 @@ public class FaqItemService : IFaqItemService
         bool showHidden = false)
     {
         if (faqGroupId <= 0)
-            return [];
+            return new List<FaqItem>();
 
         var query = _faqItemRepository.Table
             .Where(x => x.FaqGroupId == faqGroupId);
@@ -118,7 +118,7 @@ public class FaqItemService : IFaqItemService
         int faqGroupId)
     {
         if (faqGroupId <= 0)
-            return [];
+            return new List<FaqItem>();
 
         var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(
             FaqManagerDefaults.FaqItemsByGroupIdCacheKey,

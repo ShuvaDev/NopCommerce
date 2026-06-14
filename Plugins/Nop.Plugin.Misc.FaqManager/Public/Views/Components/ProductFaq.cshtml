@@ -1,43 +1,34 @@
-﻿<link href="~/Plugins/Misc.FaqManager/Content/styles.css" rel="stylesheet">
+﻿@model Nop.Plugin.Misc.FaqManager.Public.Models.ProductFaqModel
 
-<div class="faq-container">
+@if(Model.Items.Any()) {
+    <link href="~/Plugins/Misc.FaqManager/Content/styles.css" rel="stylesheet">
 
-    <div class="faq-item">
-        <button class="faq-question">
-            What is nopCommerce?
-            <span class="faq-icon">+</span>
-        </button>
-        <div class="faq-answer">
-            <p>
-                nopCommerce is a free and open-source eCommerce platform built with ASP.NET Core.
-            </p>
-        </div>
+    <div class="faq-container">
+        <h2 class="faq-title">
+            Frequently Asked Questions
+
+            @if (Model.ShowFaqCount)
+            {
+                <span class="faq-count">(@Model.FaqCount)</span>
+            }
+        </h2>
+
+        @foreach (var item in Model.Items)
+        {
+            <div class="faq-item">
+                <button class="faq-question">
+                    @item.Question
+                    <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer">
+                    <p>@item.Answer</p>
+                </div>
+            </div>
+        }
     </div>
 
-    <div class="faq-item">
-        <button class="faq-question">
-            Is nopCommerce free?
-            <span class="faq-icon">+</span>
-        </button>
-        <div class="faq-answer">
-            <p>
-                Yes, nopCommerce is completely free and open source.
-            </p>
-        </div>
-    </div>
-
-    <div class="faq-item">
-        <button class="faq-question">
-            Does nopCommerce support plugins?
-            <span class="faq-icon">+</span>
-        </button>
-        <div class="faq-answer">
-            <p>
-                Yes, nopCommerce has a powerful plugin architecture for extending functionality.
-            </p>
-        </div>
-    </div>
-
-</div>
-
-<script src="~/Plugins/Misc.FaqManager/Content/scripts.js"></script>
+    <script type="application/ld+json">
+        @Html.Raw(Model.JsonLd)
+    </script>
+    <script src="~/Plugins/Misc.FaqManager/Content/scripts.js"></script>
+}

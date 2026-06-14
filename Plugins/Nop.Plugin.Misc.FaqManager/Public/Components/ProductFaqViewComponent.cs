@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Nop.Plugin.Misc.FaqManager.Public.Factories;
 using Nop.Web.Framework.Components;
+using Nop.Web.Models.Catalog;
 
 namespace Nop.Plugin.Misc.FaqManager.Public.Components;
 
@@ -8,19 +10,39 @@ namespace Nop.Plugin.Misc.FaqManager.Public.Components;
 /// </summary>
 public class ProductFaqViewComponent : NopViewComponent
 {
+    #region Fields
+
+    protected readonly ProductFaqModelFactory _productFaqModelFactory;
+
+    #endregion
+
+    #region Ctor
+
+    public ProductFaqViewComponent(
+        ProductFaqModelFactory productFaqModelFactory)
+    {
+        _productFaqModelFactory = productFaqModelFactory;
+    }
+
+    #endregion
+
     #region Methods
 
-    /// <summary>
-    /// Invoke the widget view component
-    /// </summary>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the view component result
-    /// </returns>
-    public async Task<IViewComponentResult> InvokeAsync()
+    public async Task<IViewComponentResult> InvokeAsync(
+        string widgetZone,
+        object additionalData)
     {
-        // var model = await _faqModelFactory.PrepareProductFaqModelAsync();
-        return await ViewAsync("~/Plugins/Misc.FaqManager/Public/Views/Components/ProductFaq.cshtml");
+        if (additionalData is not ProductDetailsModel productDetailsModel)
+            return Content(string.Empty);
+
+        var model =
+            await _productFaqModelFactory
+                .PrepareProductFaqModelAsync(productDetailsModel.Id);
+
+        if (model == null || !model.Items.Any())
+            return Content(string.Empty);
+
+        return await ViewAsync("~/Plugins/Misc.FaqManager/Public/Views/Components/ProductFaq.cshtml", model);
     }
 
     #endregion
