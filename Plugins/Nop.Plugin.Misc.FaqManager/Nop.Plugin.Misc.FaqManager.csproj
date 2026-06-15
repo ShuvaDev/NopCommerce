@@ -37,10 +37,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Admin\Controllers\" />
-    <Folder Include="Admin\Factories\" />
     <Folder Include="Domain\" />
-    <Folder Include="Public\Controllers\" />
     <Folder Include="Public\Validators\" />
   </ItemGroup>
 
@@ -49,6 +46,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Admin\Views\FaqGroup\List.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Content\scripts.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

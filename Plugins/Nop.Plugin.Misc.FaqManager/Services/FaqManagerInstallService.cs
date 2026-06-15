@@ -1,5 +1,6 @@
 ﻿using Nop.Services.Configuration;
 using Nop.Services.Localization;
+using Nop.Services.Plugins;
 
 namespace Nop.Plugin.Misc.FaqManager.Services;
 
@@ -52,6 +53,17 @@ public class FaqManagerInstallService
     {
         await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
         {
+            ["plugins.misc.faqmanager.groups"] = "FAQ Groups",
+            ["plugins.misc.faqmanager.groups.fields.name"] = "Name",
+            ["plugins.misc.faqmanager.groups.fields.product"] = "Product",
+            ["plugins.misc.faqmanager.groups.fields.published"] = "Published",
+            ["plugins.misc.faqmanager.groups.fields.displayorder"] = "Display order",
+
+            ["plugins.misc.faqmanager.items"] = "FAQ Items",
+            ["plugins.misc.faqmanager.items.fields.question"] = "Question",
+            ["plugins.misc.faqmanager.items.fields.answer"] = "Answer",
+            ["plugins.misc.faqmanager.items.fields.published"] = "Published",
+            ["plugins.misc.faqmanager.items.fields.displayorder"] = "Display order"
         });
     }
     #endregion
@@ -77,6 +89,9 @@ public class FaqManagerInstallService
     {
         //settings
         await _settingService.DeleteSettingAsync<FaqManagerSettings>();
+
+        //locales
+        await _localizationService.DeleteLocaleResourcesAsync("Plugins.Misc.FaqManager.");
     }
 
     #endregion

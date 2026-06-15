@@ -13,6 +13,16 @@ public class FaqManagerDefaults
     public static string SystemName => "Misc.FaqManager";
 
     /// <summary>
+    /// Represents system name of the "FAQ Groups" menu item in the admin area
+    /// </summary>
+    public static string FaqGroupMenuSystemName => "FAQ Groups";
+
+    /// <summary>
+    /// Represents system name of the "FAQ Items" menu item in the admin area
+    /// </summary>
+    public static string FaqItemMenuSystemName => "FAQ Items";
+
+    /// <summary>
     /// Prefix used to clear FAQ cache
     /// </summary>
     public static string FaqPrefixCacheKey =>
@@ -45,6 +55,21 @@ public class FaqManagerDefaults
         public const string FAQ_GROUPS_MANAGE = "Faq.Groups.Manage";
         public const string FAQ_ITEMS_VIEW = "Faq.Items.View";
         public const string FAQ_ITEMS_MANAGE = "Faq.Items.Manage";
+    }
+
+    #endregion
+
+    #region Routes
+
+    public static class Routes
+    {
+        private const string ROUTE_PREFIX = "Plugin.Misc.FaqManager.Route.";
+
+        public static class Admin
+        {
+            public static string FaqGroupsRouteName => ROUTE_PREFIX + "FaqGroups";
+            public static string FaqItemsRouteName => ROUTE_PREFIX + "FaqItems";
+        }
     }
 
     #endregion

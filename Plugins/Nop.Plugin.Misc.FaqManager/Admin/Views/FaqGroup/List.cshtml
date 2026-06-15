@@ -1,0 +1,82 @@
+﻿@model Nop.Plugin.Misc.FaqManager.Admin.Models.FaqGroupSearchModel
+
+@{
+    Layout = "_AdminLayout";
+    ViewBag.PageTitle = T("Plugins.Misc.FaqManager.Groups").Text;
+}
+
+<nop-antiforgery-token />
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("Plugins.Misc.FaqManager.Groups")
+    </h1>
+    <div class="float-right">
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+
+        <div class="cards-group">
+
+            <div class="card card-default">
+                <div class="card-body">
+
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "faqgroups-grid",
+                        UrlRead = new DataUrl("List", "FaqGroup", null),
+                        SearchButtonId = "search-faq-groups",
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        Filters = new List<FilterParameter>
+                        {
+                            new(nameof(Model.SearchName)),
+                            new(nameof(Model.SearchProductId)),
+                            new(nameof(Model.SearchPublished))
+                        },
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new(nameof(FaqGroupModel.Name))
+                            {
+                                Title = T("Plugins.Misc.FaqManager.Groups.Fields.Name").Text
+                            },
+                            new(nameof(FaqGroupModel.ProductName))
+                            {
+                                Title = T("Plugins.Misc.FaqManager.Groups.Fields.Product").Text
+                            },
+                            new(nameof(FaqGroupModel.Published))
+                            {
+                                Title = T("Plugins.Misc.FaqManager.Groups.Fields.Published").Text,
+                                Width = "100",
+                                ClassName = NopColumnClassDefaults.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new(nameof(FaqGroupModel.DisplayOrder))
+                            {
+                                Title = T("Plugins.Misc.FaqManager.Groups.Fields.DisplayOrder").Text,
+                                Width = "100"
+                            },
+                            new(nameof(FaqGroupModel.Id))
+                            {
+                                Title = T("Admin.Common.Edit").Text,
+                                Width = "100",
+                                ClassName = NopColumnClassDefaults.Button,
+                                Render = new RenderButtonEdit(
+                                    new DataUrl("Edit"))
+                            }
+                        }
+                    })
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
