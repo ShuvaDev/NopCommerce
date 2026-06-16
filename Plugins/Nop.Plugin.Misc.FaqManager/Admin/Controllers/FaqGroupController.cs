@@ -1,11 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Nop.Core;
 using Nop.Plugin.Misc.FaqManager.Admin.Factories;
 using Nop.Plugin.Misc.FaqManager.Admin.Models;
 using Nop.Plugin.Misc.FaqManager.Domain;
 using Nop.Plugin.Misc.FaqManager.Services;
 using Nop.Services.Catalog;
+using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
+using Nop.Services.Security;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
@@ -27,6 +30,8 @@ public class FaqGroupController : BasePluginController
     private readonly ILocalizedEntityService _localizedEntityService;
     private readonly ILocalizationService _localizationService;
     private readonly INotificationService _notificationService;
+    private readonly ISettingService _settingService;
+    private readonly IStoreContext _storeContext;
 
     #endregion
 
@@ -38,7 +43,9 @@ public class FaqGroupController : BasePluginController
         IProductService productService,
         ILocalizedEntityService localizedEntityService,
         ILocalizationService localizationService,
-        INotificationService notificationService)
+        INotificationService notificationService,
+        ISettingService settingService,
+        IStoreContext storeContext)
     {
         _faqGroupModelFactory = faqGroupModelFactory;
         _faqGroupService = faqGroupService;
@@ -46,6 +53,8 @@ public class FaqGroupController : BasePluginController
         _localizedEntityService = localizedEntityService;
         _localizationService = localizationService;
         _notificationService = notificationService;
+        _settingService = settingService;
+        _storeContext = storeContext;
     }
 
     #endregion
@@ -211,6 +220,43 @@ public class FaqGroupController : BasePluginController
             return new NullJsonResult();
 
         return RedirectToAction("List");
+    }
+
+    #endregion
+
+    #region Configure
+
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
+    public virtual async Task<IActionResult> Configure()
+    {
+        var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+        var settings = await _settingService.LoadSettingAsync<FaqManagerSettings>(storeScope);
+
+        var model = new ConfigurationModel
+        {
+            ShowFaqCount = settings.ShowFaqCount
+        };
+
+        return View("~/Plugins/Misc.FaqManager/Admin/Views/FaqGroup/Configure.cshtml", model);
+    }
+
+    [HttpPost, ActionName("Configure")]
+    [FormValueRequired("save")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
+    public virtual async Task<IActionResult> Configure(ConfigurationModel model)
+    {
+        var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+        var settings = await _settingService.LoadSettingAsync<FaqManagerSettings>(storeScope);
+
+        settings.ShowFaqCount = model.ShowFaqCount;
+
+        await _settingService.SaveSettingAsync(settings, x => x.ShowFaqCount, storeScope);
+        await _settingService.ClearCacheAsync();
+
+        _notificationService.SuccessNotification(
+            await _localizationService.GetResourceAsync("Admin.Plugins.Saved"));
+
+        return RedirectToAction("Configure");
     }
 
     #endregion

@@ -67,6 +67,7 @@ public class FaqManagerInstallService
             ["plugins.misc.faqmanager.groups.fields.product.required"] = "Please select a product.",
             ["plugins.misc.faqmanager.groups.fields.published"] = "Published",
             ["plugins.misc.faqmanager.groups.fields.displayorder"] = "Display order",
+            ["plugins.misc.faqmanager.settings.showfaqcount"] = "Show FAQ count next to section heading",
 
             ["plugins.misc.faqmanager.items"] = "FAQ Items",
             ["plugins.misc.faqmanager.items.addnew"] = "Add new FAQ item",

@@ -6,6 +6,7 @@ using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Plugins;
 using Nop.Web.Framework.Infrastructure;
+using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Plugin.Misc.FaqManager
 {
@@ -16,6 +17,7 @@ namespace Nop.Plugin.Misc.FaqManager
         private readonly ISettingService _settingService;
         private readonly FaqManagerInstallService _faqManagerInstallService;
         private readonly WidgetSettings _widgetSettings;
+        private readonly INopUrlHelper _nopUrlHelper;
 
         #endregion
 
@@ -23,11 +25,13 @@ namespace Nop.Plugin.Misc.FaqManager
 
         public FaqManagerPlugin(ISettingService settingService,
             FaqManagerInstallService faqManagerInstallService,
-            WidgetSettings widgetSettings)
+            WidgetSettings widgetSettings,
+            INopUrlHelper nopUrlHelper)
         {
             _settingService = settingService;
             _faqManagerInstallService = faqManagerInstallService;
             _widgetSettings = widgetSettings;
+            _nopUrlHelper = nopUrlHelper;
         }
 
 
@@ -35,10 +39,11 @@ namespace Nop.Plugin.Misc.FaqManager
 
         #region Methods
 
-        /// <summary>
-        /// Install the plugin
-        /// </summary>
-        /// <returns>A task that represents the asynchronous operation</returns>
+        public override string GetConfigurationPageUrl()
+        {
+            return _nopUrlHelper.RouteUrl(FaqManagerDefaults.Routes.Admin.ConfigureRouteName);
+        }
+
         public override async Task InstallAsync()
         {
             await _faqManagerInstallService.InstallRequiredDataAsync();

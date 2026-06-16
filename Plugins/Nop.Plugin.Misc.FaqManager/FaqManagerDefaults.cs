@@ -75,6 +75,7 @@ public class FaqManagerDefaults
             public static string FaqItemCreateRouteName => ROUTE_PREFIX + "FaqItem.Create";
             public static string FaqItemEditRouteName => ROUTE_PREFIX + "FaqItem.Edit";
             public static string FaqItemDeleteRouteName => ROUTE_PREFIX + "FaqItem.Delete";
+            public static string ConfigureRouteName => ROUTE_PREFIX + "Configure";
         }
     }
 
