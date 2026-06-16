@@ -39,6 +39,30 @@ public class FaqItemService : IFaqItemService
 
     #region Methods
 
+    public virtual async Task<IPagedList<FaqItem>> GetAllFaqItemsAsync(
+        string question = null,
+        int faqGroupId = 0,
+        bool? published = null,
+        int pageIndex = 0,
+        int pageSize = int.MaxValue)
+    {
+        var query = _faqItemRepository.Table;
+
+        if (!string.IsNullOrWhiteSpace(question))
+            query = query.Where(x => x.Question.Contains(question));
+
+        if (faqGroupId > 0)
+            query = query.Where(x => x.FaqGroupId == faqGroupId);
+
+        if (published.HasValue)
+            query = query.Where(x => x.Published == published.Value);
+
+        query = query.OrderBy(x => x.DisplayOrder)
+                     .ThenBy(x => x.Id);
+
+        return await query.ToPagedListAsync(pageIndex, pageSize);
+    }
+
     /// <summary>
     /// Gets a FAQ item by identifier.
     /// </summary>

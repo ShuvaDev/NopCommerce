@@ -18,6 +18,9 @@ public record FaqItemModel : BaseNopEntityModel, ILocalizedModel<FaqItemLocalize
 
     public int FaqGroupId { get; set; }
 
+    [NopResourceDisplayName("Plugins.Misc.FaqManager.Groups")]
+    public string FaqGroupName { get; set; }
+
     [NopResourceDisplayName("Plugins.Misc.FaqManager.Items.Fields.Question")]
     public string Question { get; set; }
 

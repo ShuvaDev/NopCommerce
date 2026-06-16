@@ -37,6 +37,18 @@ public class RouteProvider : BaseRouteProvider, IRouteProvider
         endpointRouteBuilder.MapControllerRoute(name: FaqManagerDefaults.Routes.Admin.FaqItemsRouteName,
             pattern: "Admin/FaqItems",
             defaults: new { controller = "FaqItem", action = "List", area = AreaNames.ADMIN });
+
+        endpointRouteBuilder.MapControllerRoute(name: FaqManagerDefaults.Routes.Admin.FaqItemCreateRouteName,
+            pattern: "Admin/FaqItem/Create",
+            defaults: new { controller = "FaqItem", action = "Create", area = AreaNames.ADMIN });
+
+        endpointRouteBuilder.MapControllerRoute(name: FaqManagerDefaults.Routes.Admin.FaqItemEditRouteName,
+            pattern: "Admin/FaqItem/Edit/{id}",
+            defaults: new { controller = "FaqItem", action = "Edit", area = AreaNames.ADMIN });
+
+        endpointRouteBuilder.MapControllerRoute(name: FaqManagerDefaults.Routes.Admin.FaqItemDeleteRouteName,
+            pattern: "Admin/FaqItem/Delete/{id}",
+            defaults: new { controller = "FaqItem", action = "Delete", area = AreaNames.ADMIN });
     }
 
     /// <summary>

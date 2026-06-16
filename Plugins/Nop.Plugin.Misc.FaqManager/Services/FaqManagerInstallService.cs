@@ -74,7 +74,8 @@ public class FaqManagerInstallService
             ["plugins.misc.faqmanager.items.fields.answer"] = "Answer",
             ["plugins.misc.faqmanager.items.fields.answer.required"] = "Please provide an answer.",
             ["plugins.misc.faqmanager.items.fields.published"] = "Published",
-            ["plugins.misc.faqmanager.items.fields.displayorder"] = "Display order"
+            ["plugins.misc.faqmanager.items.fields.displayorder"] = "Display order",
+            ["plugins.misc.faqmanager.items.deleted"] = "The FAQ item has been deleted successfully."
         });
     }
     #endregion

@@ -26,6 +26,7 @@ public class NopStartup : INopStartup
         services.AddScoped<FaqManagerInstallService>();
         services.AddScoped<ProductFaqModelFactory>();
         services.AddScoped<FaqGroupModelFactory>();
+        services.AddScoped<FaqItemModelFactory>();
     }
 
     /// <summary>

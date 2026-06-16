@@ -1,0 +1,147 @@
+@model FaqItemSearchModel
+@using Nop.Plugin.Misc.FaqManager.Admin.Models
+
+@{
+    ViewBag.PageTitle = T("Plugins.Misc.FaqManager.Items").Text;
+    NopHtml.SetActiveMenuItemSystemName(Nop.Plugin.Misc.FaqManager.FaqManagerDefaults.FaqItemMenuSystemName);
+}
+
+<nop-antiforgery-token />
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("Plugins.Misc.FaqManager.Items")
+    </h1>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                <div class="card card-default">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-magnifying-glass"></i>
+                            @T("Admin.Common.Search")
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchQuestion" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="SearchQuestion" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchFaqGroupId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="SearchFaqGroupId" asp-items="@Model.AvailableFaqGroups" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchPublished" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="SearchPublished" asp-items="@Model.AvailablePublishedOptions" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-8 offset-md-4">
+                                <button type="button" id="search-faq-items" class="btn btn-primary btn-search">
+                                    <i class="fas fa-magnifying-glass"></i>
+                                    @T("Admin.Common.Search")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card card-default">
+                    <div class="card-body">
+
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "faqitems-grid",
+                            UrlRead = new DataUrl("List", "FaqItem", null),
+                            UrlDelete = new DataUrl("Delete", "FaqItem", null),
+                            SearchButtonId = "search-faq-items",
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
+                            {
+                                new(nameof(Model.SearchQuestion)),
+                                new(nameof(Model.SearchFaqGroupId)),
+                                new(nameof(Model.SearchPublished))
+                            },
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new(nameof(FaqItemModel.Question))
+                                {
+                                    Title = T("Plugins.Misc.FaqManager.Items.Fields.Question").Text,
+                                    Width = "350"
+                                },
+                                new(nameof(FaqItemModel.FaqGroupName))
+                                {
+                                    Title = T("Plugins.Misc.FaqManager.Groups").Text,
+                                    Width = "200",
+                                    Render = new RenderCustom("renderFaqGroupLink")
+                                },
+                                new(nameof(FaqItemModel.Published))
+                                {
+                                    Title = T("Plugins.Misc.FaqManager.Items.Fields.Published").Text,
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean()
+                                },
+                                new(nameof(FaqItemModel.DisplayOrder))
+                                {
+                                    Title = T("Plugins.Misc.FaqManager.Items.Fields.DisplayOrder").Text,
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.CenterAll
+                                },
+                                new(nameof(FaqItemModel.Id))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.Button,
+                                    Render = new RenderCustom("renderFaqItemEditButton")
+                                },
+                                new(nameof(FaqItemModel.Id))
+                                {
+                                    Title = T("Admin.Common.Delete").Text,
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
+                                }
+                            }
+                        })
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    function renderFaqGroupLink(data, type, row) {
+        if (row.FaqGroupId && row.FaqGroupName) {
+            return '<a href="@Url.Content("~/Admin/FaqGroup/Edit/")' + row.FaqGroupId + '">' + row.FaqGroupName + '</a>';
+        }
+        return '';
+    }
+
+    function renderFaqItemEditButton(data, type, row) {
+        return '<a href="@Url.Content("~/Admin/FaqItem/Edit/")' + row.Id + '" class="btn btn-default"><i class="fas fa-pencil-alt"></i>@T("Admin.Common.Edit").Text</a>';
+    }
+</script>
