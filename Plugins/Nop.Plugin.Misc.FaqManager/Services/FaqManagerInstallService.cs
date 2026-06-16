@@ -82,7 +82,10 @@ public class FaqManagerInstallService
             ["plugins.misc.faqmanager.items.fields.answer"] = "Answer",
             ["plugins.misc.faqmanager.items.fields.answer.required"] = "Please provide an answer.",
             ["plugins.misc.faqmanager.items.fields.published"] = "Published",
-            ["plugins.misc.faqmanager.items.fields.displayorder"] = "Display order"
+            ["plugins.misc.faqmanager.items.fields.displayorder"] = "Display order",
+
+            ["admin.catalog.products.fields.product.choose"] = "Choose a product",
+            ["admin.catalog.products.fields.product.remove"] = "Remove"
         });
     }
     #endregion
