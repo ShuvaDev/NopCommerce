@@ -63,7 +63,9 @@ public class FaqManagerInstallService
             ["plugins.misc.faqmanager.items.fields.question"] = "Question",
             ["plugins.misc.faqmanager.items.fields.answer"] = "Answer",
             ["plugins.misc.faqmanager.items.fields.published"] = "Published",
-            ["plugins.misc.faqmanager.items.fields.displayorder"] = "Display order"
+            ["plugins.misc.faqmanager.items.fields.displayorder"] = "Display order",
+
+            ["admin.catalog.products.fields.product.choose"] = "Choose a product"
         });
     }
     #endregion

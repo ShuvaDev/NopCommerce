@@ -1,8 +1,9 @@
 ﻿@model Nop.Plugin.Misc.FaqManager.Admin.Models.FaqGroupSearchModel
+@using Nop.Plugin.Misc.FaqManager.Admin.Models
 
 @{
-    Layout = "_AdminLayout";
     ViewBag.PageTitle = T("Plugins.Misc.FaqManager.Groups").Text;
+    NopHtml.SetActiveMenuItemSystemName(Nop.Plugin.Misc.FaqManager.FaqManagerDefaults.FaqGroupMenuSystemName);
 }
 
 <nop-antiforgery-token />
@@ -21,62 +22,152 @@
 
 <section class="content">
     <div class="container-fluid">
-
-        <div class="cards-group">
-
-            <div class="card card-default">
-                <div class="card-body">
-
-                    @await Html.PartialAsync("Table", new DataTablesModel
-                    {
-                        Name = "faqgroups-grid",
-                        UrlRead = new DataUrl("List", "FaqGroup", null),
-                        SearchButtonId = "search-faq-groups",
-                        Length = Model.PageSize,
-                        LengthMenu = Model.AvailablePageSizes,
-                        Filters = new List<FilterParameter>
-                        {
-                            new(nameof(Model.SearchName)),
-                            new(nameof(Model.SearchProductId)),
-                            new(nameof(Model.SearchPublished))
-                        },
-                        ColumnCollection = new List<ColumnProperty>
-                        {
-                            new(nameof(FaqGroupModel.Name))
-                            {
-                                Title = T("Plugins.Misc.FaqManager.Groups.Fields.Name").Text
-                            },
-                            new(nameof(FaqGroupModel.ProductName))
-                            {
-                                Title = T("Plugins.Misc.FaqManager.Groups.Fields.Product").Text
-                            },
-                            new(nameof(FaqGroupModel.Published))
-                            {
-                                Title = T("Plugins.Misc.FaqManager.Groups.Fields.Published").Text,
-                                Width = "100",
-                                ClassName = NopColumnClassDefaults.CenterAll,
-                                Render = new RenderBoolean()
-                            },
-                            new(nameof(FaqGroupModel.DisplayOrder))
-                            {
-                                Title = T("Plugins.Misc.FaqManager.Groups.Fields.DisplayOrder").Text,
-                                Width = "100"
-                            },
-                            new(nameof(FaqGroupModel.Id))
-                            {
-                                Title = T("Admin.Common.Edit").Text,
-                                Width = "100",
-                                ClassName = NopColumnClassDefaults.Button,
-                                Render = new RenderButtonEdit(
-                                    new DataUrl("Edit"))
-                            }
-                        }
-                    })
-
+        <div class="form-horizontal">
+            <div class="cards-group">
+                <div class="card card-default">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-magnifying-glass"></i>
+                            @T("Admin.Common.Search")
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchName" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="SearchName" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchPublished" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="SearchPublished" asp-items="@Model.AvailablePublishedOptions" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchProductId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="hidden" asp-for="SearchProductId" />
+                                        <span id="search-product-name">@Model.SearchProductName</span>
+                                        <button type="submit" onclick="javascript:OpenWindow('@(Url.Action("ProductSearchPopup", "FaqGroup", new { productIdInput = Html.IdFor(model => model.SearchProductId), productNameInput = "search-product-name", btnId = "btnRefreshSearchProduct" }))', 800, 850, true); return false;" class="btn btn-primary">
+                                            @T("Admin.Catalog.Products.Fields.Product.Choose")
+                                        </button>
+                                        <button type="submit" id="search-product-name-remove" class="btn btn-danger">
+                                            @T("Admin.Catalog.Products.Fields.Product.Remove")
+                                        </button>
+                                        <button type="submit" id="btnRefreshSearchProduct" style="display: none"></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-8 offset-md-4">
+                                <button type="button" id="search-faq-groups" class="btn btn-primary btn-search">
+                                    <i class="fas fa-magnifying-glass"></i>
+                                    @T("Admin.Common.Search")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+                <div class="card card-default">
+                    <div class="card-body">
+
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "faqgroups-grid",
+                            UrlRead = new DataUrl("List", "FaqGroup", null),
+                            SearchButtonId = "search-faq-groups",
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
+                            {
+                                new(nameof(Model.SearchName)),
+                                new(nameof(Model.SearchProductId)),
+                                new(nameof(Model.SearchPublished))
+                            },
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new(nameof(FaqGroupModel.Name))
+                                {
+                                    Title = T("Plugins.Misc.FaqManager.Groups.Fields.Name").Text,
+                                    Width = "300"
+                                },
+                                new(nameof(FaqGroupModel.ProductName))
+                                {
+                                    Title = T("Plugins.Misc.FaqManager.Groups.Fields.Product").Text,
+                                    Width = "250",
+                                    Render = new RenderCustom("renderProductNameLink")
+                                },
+                                new(nameof(FaqGroupModel.Published))
+                                {
+                                    Title = T("Plugins.Misc.FaqManager.Groups.Fields.Published").Text,
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean()
+                                },
+                                new(nameof(FaqGroupModel.DisplayOrder))
+                                {
+                                    Title = T("Plugins.Misc.FaqManager.Groups.Fields.DisplayOrder").Text,
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.CenterAll
+                                },
+                                new(nameof(FaqGroupModel.Id))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                }
+                            }
+                        })
+
+                    </div>
+                </div>
+
             </div>
-
         </div>
-
     </div>
 </section>
+
+<script>
+    $(function () {
+        toggleRemoveButton();
+    });
+
+    function toggleRemoveButton() {
+        if ($('#@Html.IdFor(model => model.SearchProductId)').val() > 0) {
+            $('#search-product-name-remove').showElement();
+        } else {
+            $('#search-product-name-remove').hideElement();
+        }
+    }
+
+    $('#search-product-name-remove').click(function () {
+        $('#search-product-name').text('');
+        $('#@Html.IdFor(model => model.SearchProductId)').val(0);
+        toggleRemoveButton();
+        return false;
+    });
+
+    $('#btnRefreshSearchProduct').click(function () {
+        toggleRemoveButton();
+        return false;
+    });
+
+    function renderProductNameLink(data, type, row) {
+        if (row.ProductId && row.ProductName) {
+            return '<a href="@Url.Content("~/Admin/Product/Edit/")' + row.ProductId + '">' + row.ProductName + '</a>';
+        }
+        return '';
+    }
+</script>

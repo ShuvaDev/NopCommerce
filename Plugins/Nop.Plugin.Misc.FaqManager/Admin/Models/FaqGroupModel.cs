@@ -32,8 +32,5 @@ public record FaqGroupModel : BaseNopEntityModel, ILocalizedModel<FaqGroupLocali
     public int DisplayOrder { get; set; }
 
     public IList<FaqGroupLocalizedModel> Locales { get; set; }
-
-    public FaqItemSearchModel FaqItemSearchModel { get; set; }
-
     #endregion
 }
