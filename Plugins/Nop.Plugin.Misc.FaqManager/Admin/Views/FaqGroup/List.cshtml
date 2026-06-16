@@ -86,6 +86,7 @@
                         {
                             Name = "faqgroups-grid",
                             UrlRead = new DataUrl("List", "FaqGroup", null),
+                            UrlDelete = new DataUrl("Delete", "FaqGroup", null),
                             SearchButtonId = "search-faq-groups",
                             Length = Model.PageSize,
                             LengthMenu = Model.AvailablePageSizes,
@@ -126,7 +127,14 @@
                                     Title = T("Admin.Common.Edit").Text,
                                     Width = "100",
                                     ClassName = NopColumnClassDefaults.Button,
-                                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                    Render = new RenderCustom("renderFaqGroupEditButton")
+                                },
+                                new(nameof(FaqGroupModel.Id))
+                                {
+                                    Title = T("Admin.Common.Delete").Text,
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
                                 }
                             }
                         })
@@ -163,6 +171,10 @@
         toggleRemoveButton();
         return false;
     });
+
+    function renderFaqGroupEditButton(data, type, row) {
+        return '<a href="@Url.Content("~/Admin/FaqGroup/Edit/")' + row.Id + '" class="btn btn-default"><i class="fas fa-pencil-alt"></i>@T("Admin.Common.Edit").Text</a>';
+    }
 
     function renderProductNameLink(data, type, row) {
         if (row.ProductId && row.ProductName) {

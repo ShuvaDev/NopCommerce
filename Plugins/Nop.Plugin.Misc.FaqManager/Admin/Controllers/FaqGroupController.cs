@@ -1,9 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Plugin.Misc.FaqManager.Admin.Factories;
 using Nop.Plugin.Misc.FaqManager.Admin.Models;
+using Nop.Plugin.Misc.FaqManager.Domain;
+using Nop.Plugin.Misc.FaqManager.Services;
 using Nop.Services.Catalog;
+using Nop.Services.Localization;
+using Nop.Services.Messages;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Plugin.Misc.FaqManager.Admin.Controllers;
@@ -17,7 +22,11 @@ public class FaqGroupController : BasePluginController
     #region Fields
 
     private readonly FaqGroupModelFactory _faqGroupModelFactory;
+    private readonly IFaqGroupService _faqGroupService;
     private readonly IProductService _productService;
+    private readonly ILocalizedEntityService _localizedEntityService;
+    private readonly ILocalizationService _localizationService;
+    private readonly INotificationService _notificationService;
 
     #endregion
 
@@ -25,10 +34,18 @@ public class FaqGroupController : BasePluginController
 
     public FaqGroupController(
         FaqGroupModelFactory faqGroupModelFactory,
-        IProductService productService)
+        IFaqGroupService faqGroupService,
+        IProductService productService,
+        ILocalizedEntityService localizedEntityService,
+        ILocalizationService localizationService,
+        INotificationService notificationService)
     {
         _faqGroupModelFactory = faqGroupModelFactory;
+        _faqGroupService = faqGroupService;
         _productService = productService;
+        _localizedEntityService = localizedEntityService;
+        _localizationService = localizationService;
+        _notificationService = notificationService;
     }
 
     #endregion
@@ -53,6 +70,147 @@ public class FaqGroupController : BasePluginController
             .PrepareFaqGroupListModelAsync(searchModel);
 
         return Json(model);
+    }
+
+    #endregion
+
+    #region Create / Edit / Delete
+
+    [CheckPermission(FaqManagerDefaults.Permissions.FAQ_GROUPS_MANAGE)]
+    public virtual async Task<IActionResult> Create()
+    {
+        var model = await _faqGroupModelFactory
+            .PrepareFaqGroupModelAsync(new FaqGroupModel(), null);
+
+        return View("~/Plugins/Misc.FaqManager/Admin/Views/FaqGroup/Create.cshtml", model);
+    }
+
+    [HttpPost]
+    [ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(FaqManagerDefaults.Permissions.FAQ_GROUPS_MANAGE)]
+    public virtual async Task<IActionResult> Create(FaqGroupModel model, bool continueEditing)
+    {
+        if (ModelState.IsValid)
+        {
+            var existingGroup = await _faqGroupService
+                .GetPublishedFaqGroupByProductIdAsync(model.ProductId);
+            if (existingGroup != null)
+            {
+                ModelState.AddModelError(string.Empty,
+                    await _localizationService.GetResourceAsync(
+                        "Plugins.Misc.FaqManager.Groups.Product.AlreadyAssigned"));
+            }
+        }
+
+        if (ModelState.IsValid)
+        {
+            var faqGroup = new FaqGroup
+            {
+                Name = model.Name,
+                ProductId = model.ProductId,
+                Published = model.Published,
+                DisplayOrder = model.DisplayOrder
+            };
+
+            await _faqGroupService.InsertFaqGroupAsync(faqGroup);
+
+            await UpdateFaqGroupLocalesAsync(faqGroup, model);
+
+            _notificationService.SuccessNotification(
+                await _localizationService.GetResourceAsync("Plugins.Misc.FaqManager.Groups.Added"));
+
+            return continueEditing
+                ? RedirectToAction("Edit", new { id = faqGroup.Id })
+                : RedirectToAction("List");
+        }
+
+        model = await _faqGroupModelFactory.PrepareFaqGroupModelAsync(model, null, true);
+
+        return View("~/Plugins/Misc.FaqManager/Admin/Views/FaqGroup/Create.cshtml", model);
+    }
+
+    [CheckPermission(FaqManagerDefaults.Permissions.FAQ_GROUPS_VIEW)]
+    public virtual async Task<IActionResult> Edit(int id)
+    {
+        var faqGroup = await _faqGroupService.GetFaqGroupByIdAsync(id);
+        if (faqGroup == null)
+            return RedirectToAction("List");
+
+        var model = await _faqGroupModelFactory
+            .PrepareFaqGroupModelAsync(null, faqGroup);
+
+        return View("~/Plugins/Misc.FaqManager/Admin/Views/FaqGroup/Edit.cshtml", model);
+    }
+
+    [HttpPost]
+    [ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(FaqManagerDefaults.Permissions.FAQ_GROUPS_MANAGE)]
+    public virtual async Task<IActionResult> Edit(FaqGroupModel model, bool continueEditing)
+    {
+        var faqGroup = await _faqGroupService.GetFaqGroupByIdAsync(model.Id);
+        if (faqGroup == null)
+            return RedirectToAction("List");
+
+        if (ModelState.IsValid)
+        {
+            var existingGroup = await _faqGroupService
+                .GetFaqGroupsByProductIdAsync(model.ProductId, true);
+            if (existingGroup.Any(g => g.Id != model.Id))
+            {
+                ModelState.AddModelError(string.Empty,
+                    await _localizationService.GetResourceAsync(
+                        "Plugins.Misc.FaqManager.Groups.Product.AlreadyAssigned"));
+            }
+        }
+
+        if (ModelState.IsValid)
+        {
+            faqGroup.Name = model.Name;
+            faqGroup.ProductId = model.ProductId;
+            faqGroup.Published = model.Published;
+            faqGroup.DisplayOrder = model.DisplayOrder;
+
+            await _faqGroupService.UpdateFaqGroupAsync(faqGroup);
+
+            await UpdateFaqGroupLocalesAsync(faqGroup, model);
+
+            _notificationService.SuccessNotification(
+                await _localizationService.GetResourceAsync("Plugins.Misc.FaqManager.Groups.Updated"));
+
+            return continueEditing
+                ? RedirectToAction("Edit", new { id = faqGroup.Id })
+                : RedirectToAction("List");
+        }
+
+        model = await _faqGroupModelFactory.PrepareFaqGroupModelAsync(model, faqGroup, true);
+
+        return View("~/Plugins/Misc.FaqManager/Admin/Views/FaqGroup/Edit.cshtml", model);
+    }
+
+    [HttpPost]
+    [CheckPermission(FaqManagerDefaults.Permissions.FAQ_GROUPS_MANAGE)]
+    public virtual async Task<IActionResult> Delete(int id)
+    {
+        var faqGroup = await _faqGroupService.GetFaqGroupByIdAsync(id);
+        if (faqGroup == null)
+            return RedirectToAction("List");
+
+        try
+        {
+            await _faqGroupService.DeleteFaqGroupAsync(faqGroup);
+
+            _notificationService.SuccessNotification(
+                await _localizationService.GetResourceAsync("Plugins.Misc.FaqManager.Groups.Deleted"));
+        }
+        catch (Exception exc)
+        {
+            await _notificationService.ErrorNotificationAsync(exc);
+        }
+
+        if (Request.Headers.XRequestedWith == "XMLHttpRequest")
+            return new NullJsonResult();
+
+        return RedirectToAction("List");
     }
 
     #endregion
@@ -95,6 +253,22 @@ public class FaqGroupController : BasePluginController
             .PrepareFaqGroupProductSearchModelAsync(new FaqGroupProductSearchModel());
 
         return View("~/Plugins/Misc.FaqManager/Admin/Views/FaqGroup/ProductSearchPopup.cshtml", searchModel);
+    }
+
+    #endregion
+
+    #region Utilities
+
+    private async Task UpdateFaqGroupLocalesAsync(FaqGroup faqGroup, FaqGroupModel model)
+    {
+        foreach (var locale in model.Locales)
+        {
+            await _localizedEntityService.SaveLocalizedValueAsync(
+                faqGroup,
+                x => x.Name,
+                locale.Name,
+                locale.LanguageId);
+        }
     }
 
     #endregion

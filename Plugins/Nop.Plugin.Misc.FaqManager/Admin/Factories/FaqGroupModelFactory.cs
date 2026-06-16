@@ -138,23 +138,29 @@ public class FaqGroupModelFactory
                 faqGroup.ProductId);
 
             model.ProductName = product?.Name;
+        }
 
-            if (!excludeProperties)
+        if (!excludeProperties && model != null)
+        {
+            var languages = await _languageService.GetAllLanguagesAsync();
+
+            foreach (var language in languages)
             {
-                var languages = await _languageService.GetAllLanguagesAsync();
-
-                foreach (var language in languages)
+                var locale = new FaqGroupLocalizedModel
                 {
-                    model.Locales.Add(new FaqGroupLocalizedModel
-                    {
-                        LanguageId = language.Id,
-                        Name = await _localizedEntityService.GetLocalizedValueAsync(
-                            language.Id,
-                            model.Id,
-                            nameof(FaqGroup),
-                            nameof(FaqGroup.Name))
-                    });
+                    LanguageId = language.Id
+                };
+
+                if (faqGroup != null)
+                {
+                    locale.Name = await _localizedEntityService.GetLocalizedValueAsync(
+                        language.Id,
+                        faqGroup.Id,
+                        nameof(FaqGroup),
+                        nameof(FaqGroup.Name));
                 }
+
+                model.Locales.Add(locale);
             }
         }
 
