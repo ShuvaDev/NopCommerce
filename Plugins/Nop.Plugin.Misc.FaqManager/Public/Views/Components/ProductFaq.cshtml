@@ -17,11 +17,11 @@
         {
             <div class="faq-item">
                 <button class="faq-question">
-                    @item.Question
+                    @Html.Raw(item.Question)
                     <span class="faq-icon">+</span>
                 </button>
                 <div class="faq-answer">
-                    <p>@item.Answer</p>
+                    <p>@Html.Raw(item.Answer)</p>
                 </div>
             </div>
         }

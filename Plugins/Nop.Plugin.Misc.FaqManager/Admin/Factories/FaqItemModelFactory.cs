@@ -142,6 +142,21 @@ public class FaqItemModelFactory
             }
         }
 
+        if (model != null)
+        {
+            var faqGroups = await _faqGroupService.GetAllFaqGroupsAsync();
+            model.AvailableFaqGroups.Add(new SelectListItem { Text = "Select a FAQ group", Value = "0" });
+            foreach (var faqGroup in faqGroups)
+            {
+                model.AvailableFaqGroups.Add(new SelectListItem
+                {
+                    Text = faqGroup.Name,
+                    Value = faqGroup.Id.ToString(),
+                    Selected = faqGroup.Id == model.FaqGroupId
+                });
+            }
+        }
+
         return model;
     }
 

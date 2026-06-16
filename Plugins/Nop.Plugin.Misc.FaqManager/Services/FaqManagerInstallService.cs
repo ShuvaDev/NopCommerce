@@ -69,13 +69,19 @@ public class FaqManagerInstallService
             ["plugins.misc.faqmanager.groups.fields.displayorder"] = "Display order",
 
             ["plugins.misc.faqmanager.items"] = "FAQ Items",
+            ["plugins.misc.faqmanager.items.addnew"] = "Add new FAQ item",
+            ["plugins.misc.faqmanager.items.edittetails"] = "Edit FAQ item details",
+            ["plugins.misc.faqmanager.items.backtolist"] = "back to list",
+            ["plugins.misc.faqmanager.items.added"] = "The FAQ item has been added successfully.",
+            ["plugins.misc.faqmanager.items.updated"] = "The FAQ item has been updated successfully.",
+            ["plugins.misc.faqmanager.items.deleted"] = "The FAQ item has been deleted successfully.",
+            ["plugins.misc.faqmanager.items.fields.faqgroup.required"] = "Please select a FAQ group.",
             ["plugins.misc.faqmanager.items.fields.question"] = "Question",
             ["plugins.misc.faqmanager.items.fields.question.required"] = "Please provide a question.",
             ["plugins.misc.faqmanager.items.fields.answer"] = "Answer",
             ["plugins.misc.faqmanager.items.fields.answer.required"] = "Please provide an answer.",
             ["plugins.misc.faqmanager.items.fields.published"] = "Published",
-            ["plugins.misc.faqmanager.items.fields.displayorder"] = "Display order",
-            ["plugins.misc.faqmanager.items.deleted"] = "The FAQ item has been deleted successfully."
+            ["plugins.misc.faqmanager.items.fields.displayorder"] = "Display order"
         });
     }
     #endregion

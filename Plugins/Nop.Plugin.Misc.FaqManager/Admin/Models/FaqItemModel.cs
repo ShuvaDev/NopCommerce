@@ -1,4 +1,5 @@
-﻿using Nop.Web.Framework.Models;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Plugin.Misc.FaqManager.Admin.Models;
@@ -10,12 +11,14 @@ public record FaqItemModel : BaseNopEntityModel, ILocalizedModel<FaqItemLocalize
     public FaqItemModel()
     {
         Locales = new List<FaqItemLocalizedModel>();
+        AvailableFaqGroups = new List<SelectListItem>();
     }
 
     #endregion
 
     #region Properties
 
+    [NopResourceDisplayName("Plugins.Misc.FaqManager.Groups")]
     public int FaqGroupId { get; set; }
 
     [NopResourceDisplayName("Plugins.Misc.FaqManager.Groups")]
@@ -34,6 +37,8 @@ public record FaqItemModel : BaseNopEntityModel, ILocalizedModel<FaqItemLocalize
     public int DisplayOrder { get; set; }
 
     public IList<FaqItemLocalizedModel> Locales { get; set; }
+
+    public IList<SelectListItem> AvailableFaqGroups { get; set; }
 
     #endregion
 }

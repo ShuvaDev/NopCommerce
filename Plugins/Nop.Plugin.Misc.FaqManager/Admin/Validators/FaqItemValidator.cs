@@ -14,6 +14,11 @@ public class FaqItemValidator : BaseNopValidator<FaqItemModel>
 
     public FaqItemValidator(ILocalizationService localizationService)
     {
+        RuleFor(x => x.FaqGroupId)
+            .GreaterThan(0)
+            .WithMessageAwait(localizationService.GetResourceAsync(
+                "Plugins.Misc.FaqManager.Items.Fields.FaqGroup.Required"));
+
         RuleFor(x => x.Question)
             .NotEmpty()
             .WithMessageAwait(localizationService.GetResourceAsync(
